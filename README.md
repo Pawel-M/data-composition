@@ -44,3 +44,27 @@ PYTHONPATH=path/to/repo/src/ python -m evaluating.opus_mt_ctxpro --configs base_
 ```bash
 PYTHONPATH=path/to/repo/src/ python -m evaluating.opus_mt_contrapro --configs base_config.yaml contrapro_config.yaml
 ```
+
+The evaluation in the multilingual setting is slightly different due to the number of language directions. Navigate to the folder representing the language pair you want to evaluate. For example, for the `en-de` language pair navigate to `model/ende/` and run the evaluation scripts (note that `base_config.yaml` is in the parent folder):
+- Translate IWSLT:
+```bash
+PYTHONPATH=path/to/repo/src/ python -m evaluating.opus_mt_translate --configs ../base_config.yaml iwslt_translate_config.yaml
+```
+- Translate OpenSubtitles:
+```bash
+PYTHONPATH=path/to/repo/src/ python -m evaluating.opus_mt_translate --configs ../base_config.yaml ../base_os_translate_config.yaml os_translate_config.yaml
+```
+- Evaluate ctxPro:
+```bash
+PYTHONPATH=path/to/repo/src/ python -m evaluating.opus_mt_ctxpro --configs ../base_config.yaml ../base_ctxpro_config.yaml ctxpro_config.yaml
+```
+- Contrapro:
+```bash
+PYTHONPATH=path/to/repo/src/ python -m evaluating.opus_mt_contrapro --configs ../base_config.yaml contrapro_config.yaml
+```
+
+## AI Assistant Usage
+
+During writing the code in this repository we used Github Copilot (https://github.com/features/copilot).
+
+
