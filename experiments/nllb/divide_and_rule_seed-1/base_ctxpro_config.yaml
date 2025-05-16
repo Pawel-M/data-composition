@@ -1,0 +1,10 @@
+results_dir: .
+dataset: ctxpro_os
+dataset_splits: [test]
+base_dataset_name: opensubtitles
+raw_dataset_path: ctxPro_path/release
+dataset_path: path/to/repo/data/hf_ctxpro
+results_suffix: null
+beam_size: 5
+batch_size: 16
+full_sequence_decoding: true

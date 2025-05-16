@@ -1,0 +1,8 @@
+results_dir: .
+results_suffix: null
+contrapro_dir: path/to/repo/data/ContraPro
+filter_context_size: false
+limit_dataset_size: null
+src_lang: en
+tgt_lang: de
+batch_size: 16

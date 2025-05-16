@@ -1,0 +1,11 @@
+results_dir: .
+dataset: contrapro
+dataset_splits: none
+raw_dataset_path: $PROJECT_HOME/fine-tuning-ctx-mt/data/ContraPro
+dataset_path: $PROJECT_HOME/fine-tuning-ctx-mt/data/hf_contrapro
+results_suffix: null
+src_lang: en
+tgt_lang: de
+beam_size: 5
+batch_size: 16
+full_sequence_decoding: true

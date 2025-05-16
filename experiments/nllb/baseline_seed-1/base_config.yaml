@@ -1,0 +1,6 @@
+src_ctx_size: 3
+tgt_ctx_size: 3
+model_path: ../model
+tokenizer_path: ../tokenizer
+max_length: 1024
+tokenizer_name: 'nllb-600-ctx'

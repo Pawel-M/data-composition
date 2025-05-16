@@ -1,0 +1,11 @@
+results_dir: .
+dataset: iwslt2017
+dataset_splits: [test]
+raw_dataset_path: none
+dataset_path: path/to/repo/data/hf_iwslt17
+results_suffix: null
+src_lang: en
+tgt_lang: fr
+beam_size: 5
+batch_size: 8
+full_sequence_decoding: true
