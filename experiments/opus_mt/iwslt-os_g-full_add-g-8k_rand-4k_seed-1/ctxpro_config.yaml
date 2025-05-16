@@ -1,0 +1,11 @@
+results_dir: .
+dataset: ctxpro_os
+dataset_splits: [test]
+phenomena: [auxiliary, formality, gender]
+base_dataset_name: opensubtitles
+raw_dataset_path: ctxPro_path/release
+dataset_path: path/to/repo/data/hf_ctxpro
+results_suffix: null
+batch_size: 64
+beam_size: 5
+full_sequence_decoding: true

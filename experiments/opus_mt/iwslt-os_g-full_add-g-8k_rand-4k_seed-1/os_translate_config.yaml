@@ -1,0 +1,13 @@
+results_dir: .
+dataset: opensubtitles
+raw_dataset_path: ctxPro_path/data/opensubs/
+dataset_path: path/to/repo/data/hf_opensubtitles
+dataset_annotation_path: ctxPro_path/release
+valid_size: 2_000
+test_size: 20_000
+split_seed: 1
+max_test_size: 500_000
+results_suffix: null
+beam_size: 5
+batch_size: 32
+full_sequence_decoding: true

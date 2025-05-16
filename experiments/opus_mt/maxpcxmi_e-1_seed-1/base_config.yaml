@@ -1,0 +1,8 @@
+src_lang: en
+tgt_lang: de
+src_ctx_size: 3
+tgt_ctx_size: 3
+model_path: ./model
+tokenizer_path: ./tokenizer
+max_length: 512
+tokenizer_name: 'opusmt-ende-ctx'

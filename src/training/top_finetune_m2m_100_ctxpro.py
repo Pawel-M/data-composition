@@ -47,10 +47,6 @@ def calculate_pcxmi(
     sources_context = [t[src_lang] for t in examples['context']]
     targets_context = [t[tgt_lang] for t in examples['context']]
 
-    half_batch_size = len(sources) // 2
-    shifted_source_context = sources_context[half_batch_size:] + sources_context[:half_batch_size]
-    shifted_target_context = targets_context[half_batch_size:] + targets_context[:half_batch_size]
-
     with torch.no_grad():
         ctx_token_logprob, ctx_tgt_ids, ctx_tgt_attention_mask, ctx_attentions = score_contextual(
             model=model,
@@ -64,19 +60,6 @@ def calculate_pcxmi(
             source_contexts=sources_context,
             target_contexts=targets_context,
             output_attentions=True,
-        )
-
-        shift_token_logprob, shift_tgt_ids, shift_tgt_attention_mask = score_contextual(
-            model=model,
-            tokenizer=tokenizer,
-            device=device,
-            source_context_size=src_ctx_size,
-            target_context_size=tgt_ctx_size,
-            max_length=max_length,
-            sources=sources,
-            targets=targets,
-            source_contexts=shifted_source_context,
-            target_contexts=shifted_target_context,
         )
 
         sent_token_logprob, sent_tgt_ids, sent_tgt_attention_mask = score_contextual(
@@ -101,65 +84,23 @@ def calculate_pcxmi(
 
     token_pcxmis = []
     pcxmis = []
-    avg_token_prob_diffs = []
-    max_token_prob_diffs = []
     max_token_pcxmis = []
-    avg_token_relu_pcxmis = []
     avg_token_pcxmis = []
-    max_shift_token_prob_diffs = []
-    avg_relu_token_prob_diffs = []
-    shift_pcxmis = []
-    shift_token_pcxmis = []
-    attention_sum_dec_6_4 = []
-    attention_sum_second_dec_6_4 = []
-    perplexity_diffs = []
-    perplexity_proportions = []
     for b in range(sent_token_logprob.shape[0]):
         ctx_logprobs = ctx_token_logprob[b, tgt_lens_diffs[b]:tgt_lens_diffs[b] + sent_tgt_lens[b]]
         sent_logprobs = sent_token_logprob[b, :sent_tgt_lens[b]]
-        shift_ctx_logprobs = shift_token_logprob[b,
-                             shift_tgt_lens_diffs[b]:shift_tgt_lens_diffs[b] + sent_tgt_lens[b]]
 
         ctx_probs = ctx_logprobs.exp()
         sent_probs = sent_logprobs.exp()
-        shift_probs = shift_ctx_logprobs.exp()
 
         token_pcxmi = ctx_logprobs - sent_logprobs
         pcxmi = ctx_logprobs.sum() - sent_logprobs.sum()
-        token_prob_diff = ctx_probs - sent_probs
 
-        # shift P-CXMI
-        shift_token_pcxmi = ctx_logprobs - shift_ctx_logprobs
-        shift_pcxmi = ctx_logprobs.sum() - shift_ctx_logprobs.sum()
-        shift_token_prob_diff = ctx_probs - shift_probs
 
-        # attentions
-        dec_6_4_attn = ctx_attentions['decoder'][5][b, 3, ...]
-        dec_6_4_attn = dec_6_4_attn[tgt_lens_diffs[b]:tgt_lens_diffs[b] + sent_tgt_lens[b], :]
-        attention_sum_dec_6_4.append(dec_6_4_attn[:tgt_lens_diffs[b]].sum().item())
-        attention_sum_second_dec_6_4.append(dec_6_4_attn[1:tgt_lens_diffs[b]].sum().item())
-
-        # perplexity
-        ctx_loss = -ctx_logprobs.masked_select(sent_tgt_attention_mask[b, :sent_tgt_lens[b]].bool()).mean()
-        sent_loss = -sent_logprobs.masked_select(sent_tgt_attention_mask[b, :sent_tgt_lens[b]].bool()).mean()
-        ctx_perplexity = torch.exp(ctx_loss)
-        sent_perplexity = torch.exp(sent_loss)
-        perplexity_diff = sent_perplexity - ctx_perplexity
-        perplexity_proportion = sent_perplexity / ctx_perplexity
-
-        avg_token_prob_diffs.append(token_prob_diff.mean().item())
-        max_token_prob_diffs.append(token_prob_diff.max().item())
-        max_shift_token_prob_diffs.append(shift_token_prob_diff.max().item())
-        avg_relu_token_prob_diffs.append(token_prob_diff.relu().mean().item())
         token_pcxmis.append(token_pcxmi)
         pcxmis.append(pcxmi)
         max_token_pcxmis.append(token_pcxmi.max().item())
-        avg_token_relu_pcxmis.append(token_pcxmi.relu().mean().item())
         avg_token_pcxmis.append(token_pcxmi.mean().item())
-        shift_pcxmis.append(shift_pcxmi)
-        shift_token_pcxmis.append(shift_token_pcxmi)
-        perplexity_diffs.append(perplexity_diff.item())
-        perplexity_proportions.append(perplexity_proportion.item())
         pass
 
     pass
@@ -171,21 +112,9 @@ def calculate_pcxmi(
 
     pass
     examples['token_pcxmi'] = token_pcxmis
-    examples['shift_pcxmi'] = shift_pcxmis
     examples['pcxmi'] = pcxmis
     examples['max_token_pcxmi'] = max_token_pcxmis
-    examples['avg_token_relu_pcxmi'] = avg_token_relu_pcxmis
     examples['avg_token_pcxmi'] = avg_token_pcxmis
-    examples['shift_token_pcxmi'] = shift_token_pcxmis
-    examples['max_token_prob_diff'] = max_token_prob_diffs
-    examples['avg_token_prob_diff'] = avg_token_prob_diffs
-    examples['avg_relu_token_prob_diff'] = avg_relu_token_prob_diffs
-    examples['attention_sum_dec_6_4'] = attention_sum_dec_6_4
-    examples['attention_sum_second_dec_6_4'] = attention_sum_second_dec_6_4
-    examples['perplexity_diff'] = perplexity_diffs
-    examples['perplexity_proportion'] = perplexity_proportions
-    examples['shift_max_token_prob_diff'] = max_shift_token_prob_diffs
-    examples['random'] = [np.random.random() for _ in pcxmis]
 
     examples['annotated_current'] = annotated_current
     examples['target'] = targets
