@@ -1,0 +1,11 @@
+results_dir: .
+dataset: ctxpro_os
+dataset_splits: [test]
+base_dataset_name: opensubtitles
+raw_dataset_path: $PROJECT_HOME/Datasets/ctxpro/release
+dataset_path: $PROJECT_HOME/fine-tuning-ctx-mt/data/hf_ctxpro
+results_suffix: null
+batch_size: 32 # 4
+beam_size: 1
+do_sample: false
+gold_target_context: false

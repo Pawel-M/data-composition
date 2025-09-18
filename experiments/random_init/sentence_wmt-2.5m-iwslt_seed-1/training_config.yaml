@@ -1,0 +1,39 @@
+results_dir: .
+results_suffix: null
+tokenizer_name: 'opus-mt-ende'
+model_path: "Helsinki-NLP/opus-mt-en-de"
+tokenizer_path: "Helsinki-NLP/opus-mt-en-de"
+random_initialization: true
+max_length: 512
+lang_pairs:
+  - "en-de"
+src_ctx_size: 0
+tgt_ctx_size: 0
+seed: 1
+datasets:
+  -
+    dataset_name: wmt19
+    dataset_splits: [train]
+    dataset_path: $PROJECT_HOME/fine-tuning-ctx-mt/data/hf_wmt19
+    limit_size: 2_500_000
+    lang_pairs:
+      - "en-de"
+  - dataset_name: iwslt2017
+    dataset_splits: [train]
+    dataset_path: $PROJECT_HOME/fine-tuning-ctx-mt/data/hf_iwslt17
+    dataset_annotation_path: ~/VOXReality/data/iwslt2017Yin
+    sample_ctx_size: false
+    lang_pairs:
+      - "en-de"
+training_arguments:
+  optim: adafactor
+  learning_rate: 0.00005
+  lr_scheduler_type: linear
+  warmup_ratio: 0.0
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 32
+  gradient_accumulation_steps: 16
+  weight_decay: 0.01
+  save_total_limit: 30
+  num_train_epochs: 30
+  fp16: true

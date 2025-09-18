@@ -1,0 +1,10 @@
+results_dir: .
+dataset: iwslt2017
+dataset_splits: [test]
+raw_dataset_path: none
+dataset_path: $PROJECT_HOME/fine-tuning-ctx-mt/data/hf_iwslt17
+results_suffix: null
+batch_size: 32 # 4
+beam_size: 1
+do_sample: false
+gold_target_context: false

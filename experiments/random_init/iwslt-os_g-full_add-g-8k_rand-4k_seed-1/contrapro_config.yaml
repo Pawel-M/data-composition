@@ -1,0 +1,14 @@
+results_dir: .
+results_suffix: null
+contrapro_dir: ~/fine-tuning-ctx-mt/data/ContraPro
+contrapro_ctx_size: 1
+filter_context_size: False
+limit_dataset_size: null
+batch_size: 64
+#src_lang: en
+#tgt_lang: de
+#src_ctx_size: 1
+#tgt_ctx_size: 1
+#model_path: ./model
+#tokenizer_path: ./tokenizer
+#max_length: 512

@@ -1,0 +1,16 @@
+results_dir: .
+dataset: contrapro
+results_suffix: null
+dataset_splits: null
+raw_dataset_path: ~/fine-tuning-ctx-mt/data/ContraPro
+dataset_path: ~/fine-tuning-ctx-mt/data/hf_contrapro
+#src_lang: en
+#tgt_lang: de
+#src_ctx_size: 1
+#tgt_ctx_size: 1
+#model_path: ./model
+#tokenizer_path: ./tokenizer
+#max_length: 512
+batch_size: 64
+beam_size: 5
+full_sequence_decoding: true

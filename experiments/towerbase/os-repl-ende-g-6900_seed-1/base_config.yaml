@@ -1,0 +1,10 @@
+src_lang: en
+tgt_lang: de
+src_ctx_size: 3
+tgt_ctx_size: 3
+base_model: "Unbabel/TowerBase-7B-v0.1"
+model_path: ../model
+tokenizer_path: ../tokenizer
+max_length: 1024
+max_prompt_length: 1024
+tokenizer_name: 'towerbase_7B'

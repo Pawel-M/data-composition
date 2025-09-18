@@ -1,0 +1,15 @@
+results_dir: .
+dataset: opensubtitles
+raw_dataset_path: $PROJECT_HOME/Datasets/ctxpro/data/opensubs/
+dataset_path: $PROJECT_HOME/fine-tuning-ctx-mt/data/hf_opensubtitles
+dataset_annotation_path: $PROJECT_HOME/Datasets/ctxpro/release
+#train_size: 10_000
+#valid_size: 2_000
+test_size: 20_000
+split_seed: 1
+max_test_size: 500_000
+results_suffix: null
+batch_size: 32 # 4
+beam_size: 1
+do_sample: false
+gold_target_context: false

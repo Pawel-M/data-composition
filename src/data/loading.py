@@ -1,5 +1,6 @@
 import os
 import warnings
+from copy import deepcopy
 
 import datasets
 import numpy as np
@@ -61,10 +62,19 @@ def load_dataset(dataset_name, config, ):
             filter_context_size=config.get('filter_context_size', False),
         )
 
+    elif dataset_name == 'wmt19':
+        dataset = load_wmt19_dataset(
+            base_data_dir=config.dataset_path,
+            src_lang=config.src_lang,
+            tgt_lang=config.tgt_lang,
+            splits=config.dataset_splits,
+        )
+
     else:
         raise ValueError(f'Dataset {dataset_name} is not supported!')
 
     return dataset
+
 
 def load_iwslt2017_dataset(base_data_dir,
                            src_lang,
@@ -203,8 +213,6 @@ def load_ctxpro_opensubtitles_dataset(raw_data_dir,
                                       tgt_lang,
                                       src_ctx_size,
                                       tgt_ctx_size,
-                                      # src_phenomena_file_paths=None,
-                                      # tgt_phenomena_file_paths=None,
                                       ):
     raw_data_dir = expand_path(raw_data_dir)
     base_data_dir = expand_path(base_data_dir)
@@ -411,6 +419,40 @@ def load_ctxpro_iwslt2017_dataset(
     return tgt_ctx_stripped_ds
 
 
+def load_wmt19_dataset(base_data_dir,
+                       src_lang,
+                       tgt_lang,
+                       splits=None,):
+    base_data_dir = expand_path(base_data_dir)
+
+    WMT19_LANG_PAIRS = (
+        'cs-en',
+        'de-en',
+        'fi-en',
+        'fr-de',
+        'gu-en',
+        'kk-en',
+        'lt-en',
+        'ru-en',
+        'zh-en',
+    )
+
+    if f'{src_lang}-{tgt_lang}' in WMT19_LANG_PAIRS:
+        lang1, lang2 = src_lang, tgt_lang
+    elif f'{tgt_lang}-{src_lang}' in WMT19_LANG_PAIRS:
+        lang1, lang2 = tgt_lang, src_lang
+    else:
+        raise ValueError(f'Language pair {src_lang}-{tgt_lang} is not supported for WMT19 dataset!')
+
+
+    data_dir = os.path.join(base_data_dir, f'{lang1}-{lang2}', 'ctx-0-0')
+    dataset = datasets.load_dataset("wmt/wmt19", f'{lang1}-{lang2}', cache_dir=data_dir)
+    if splits is not None:
+        dataset = DatasetDict({k: dataset[k] for k in splits})
+
+    return dataset
+
+
 def _tokenize(examples,
               tokenizer,
               src_lang, tgt_lang,
@@ -530,18 +572,25 @@ def prepare_dataset(tokenizer,
     if tokenize_fn is None:
         tokenize_fn = _tokenize
 
+    additional_tokenize_kwargs = {
+        'tokenizer': tokenizer,
+        'src_lang': src_lang,
+        'tgt_lang': tgt_lang,
+        'src_ctx_size': src_ctx_size,
+        'tgt_ctx_size': tgt_ctx_size,
+        'max_length': max_length,
+        # 'forced_bos_token_id': tokenizer.convert_tokens_to_ids(tokenizer.tgt_lang),
+    }
+    if hasattr(tokenizer, 'tgt_lang'):
+        additional_tokenize_kwargs['forced_bos_token_id'] = tokenizer.convert_tokens_to_ids(tokenizer.tgt_lang)
+
     if tokenize_kwargs is None:
-        tokenize_kwargs = {
-            'tokenizer': tokenizer,
-            'src_lang': src_lang,
-            'tgt_lang': tgt_lang,
-            'src_ctx_size': src_ctx_size,
-            'tgt_ctx_size': tgt_ctx_size,
-            'max_length': max_length,
-            # 'forced_bos_token_id': tokenizer.convert_tokens_to_ids(tokenizer.tgt_lang),
-        }
-        if hasattr(tokenizer, 'tgt_lang'):
-            tokenize_kwargs['forced_bos_token_id'] = tokenizer.convert_tokens_to_ids(tokenizer.tgt_lang)
+        tokenize_kwargs = additional_tokenize_kwargs
+    else:
+        tokenize_kwargs = deepcopy(tokenize_kwargs)
+        for k, v in additional_tokenize_kwargs.items():
+            if k not in tokenize_kwargs:
+                tokenize_kwargs[k] = v
 
     if train_size is None and valid_size is None and test_size is None:
         prepared_dataset = _load_or_prepare_dataset(
@@ -589,15 +638,10 @@ def prepare_dataset(tokenizer,
     prepared_valid_dataset = None
     if valid_size is not None:
         if max_test_size is not None:
-            # assert train_size + valid_size <= dataset_size - max_test_size
             valid_data_file = f'{base_data_file}_valid_size-{valid_size}-{split_seed}_test-max-{max_test_size}'
-            # valid_indices = indices[dataset_size - max_test_size - valid_size:]
         else:
-            # assert train_size + valid_size <= dataset_size
             valid_data_file = f'{base_data_file}_valid_size-{valid_size}-{split_seed}_train-{train_size}'
-            # valid_indices = indices[train_size:train_size + valid_size]
 
-        # valid_dataset = dataset.select(valid_indices)
         prepared_valid_dataset = _load_or_prepare_dataset(
             raw_dataset=valid_dataset,
             tokenize_fn=tokenize_fn,
@@ -668,7 +712,6 @@ def load_ctxpro_dataset(raw_data_dir,
                         ):
     raw_data_dir = expand_path(raw_data_dir)
     base_data_dir = expand_path(base_data_dir)
-
 
     context_size = max(max(src_ctx_size, tgt_ctx_size), 1)
 

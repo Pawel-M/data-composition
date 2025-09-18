@@ -1,0 +1,18 @@
+results_dir: .
+dataset: ctxpro_os
+dataset_splits: [test]
+phenomena: [auxiliary, formality, gender]
+base_dataset_name: opensubtitles
+raw_dataset_path: ~/Datasets/ctxpro/release
+dataset_path: ~/fine-tuning-ctx-mt/data/hf_ctxpro
+results_suffix: null
+#src_lang: en
+#tgt_lang: de
+#src_ctx_size: 1
+#tgt_ctx_size: 1
+#model_path: ./model
+#tokenizer_path: ./tokenizer
+#max_length: 512
+batch_size: 64
+beam_size: 5
+full_sequence_decoding: true

@@ -1,0 +1,9 @@
+results_dir: .
+dataset: wmt19
+dataset_splits: [validation]
+raw_dataset_path: none
+dataset_path: $PROJECT_HOME/fine-tuning-ctx-mt/data/hf_wmt19
+results_suffix: null
+batch_size: 64
+beam_size: 5
+full_sequence_decoding: true

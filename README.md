@@ -1,6 +1,6 @@
 # _You Are What You Train_: Effects of Data Composition on Training Context-aware Machine Translation Models
 
-This repository contains the code for the paper "_You Are What You Train_: Effects of Data Composition on Training Context-aware Machine Translation Models".
+This repository contains the code for the paper "You Are What You Train: Effects of Data Composition on Training Context-aware Machine Translation Models" ([https://arxiv.org/abs/2509.14031](https://arxiv.org/abs/2509.14031)).
 
 ## Requirements
 This repository was created in Python `3.12`. We use huggingface datasets framework. 
@@ -63,8 +63,25 @@ PYTHONPATH=path/to/repo/src/ python -m evaluating.opus_mt_ctxpro --configs ../ba
 PYTHONPATH=path/to/repo/src/ python -m evaluating.opus_mt_contrapro --configs ../base_config.yaml contrapro_config.yaml
 ```
 
+LLM-based experiments are evaluated in a similar way.
+
 ## AI Assistant Usage
 
 During writing the code in this repository we used Github Copilot (https://github.com/features/copilot).
 
 
+## Citation
+
+Please use the following citation if you find this repository or the accompanying paper useful for your research:
+
+```
+@misc{mąka2025traineffectsdatacomposition,
+      title={You Are What You Train: Effects of Data Composition on Training Context-aware Machine Translation Models}, 
+      author={Paweł Mąka and Yusuf Can Semerci and Jan Scholtes and Gerasimos Spanakis},
+      year={2025},
+      eprint={2509.14031},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2509.14031}, 
+}
+```

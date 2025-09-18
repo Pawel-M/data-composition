@@ -1,0 +1,81 @@
+results_dir: .
+results_suffix: null
+tokenizer_name: 'opus-mt-ende-ctx'
+model_path: ../sentence_ende_ds-wmt-2.5m-iwslt_e-30_lr-5e-5-lin_bs-32-16_s-1/model
+tokenizer_path: ../sentence_ende_ds-wmt-2.5m-iwslt_e-30_lr-5e-5-lin_bs-32-16_s-1/tokenizer
+max_length: 512
+lang_pairs:
+  - "en-de"
+src_ctx_size: 3
+tgt_ctx_size: 3
+seed: 1
+datasets:
+  - # poor
+    dataset_name: iwslt2017
+    dataset_splits: [train]
+    dataset_path: ~/fine-tuning-ctx-mt/data/hf_iwslt17
+    dataset_annotation_path: ~/VOXReality/data/iwslt2017Yin
+    sample_ctx_size: true
+    lang_pairs:
+      - "en-de"
+    filter_out: true
+    filtered_phenomena:
+      - "gender"
+      - "auxiliary"
+      - "formality"
+      - "inflection"
+      - "animacy"
+    limit_size: 116085
+  - # gender-rich
+    dataset_name: iwslt2017
+    dataset_splits: [train]
+    dataset_path: ~/fine-tuning-ctx-mt/data/hf_iwslt17
+    sample_ctx_size: true
+    lang_pairs:
+      - "en-de"
+    filter_unique: true
+    filter_only_current_sentence: true
+    filtered_phenomena:
+      - "gender"
+#      - "auxiliary"
+#      - "formality"
+#      - "inflection"
+#      - "animacy"
+  - # additional rich
+    dataset_name: ctxpro
+    raw_dataset_path: ~/Datasets/ctxpro/data/opensubs/
+    base_dataset_path: ~/fine-tuning-ctx-mt/data/hf_opensubtitles
+    dataset_annotation_path: ~/Datasets/ctxpro/release
+    processed_dataset_path: ~/fine-tuning-ctx-mt/data/hf_opensubtitles_ctxpro
+    sample_ctx_size: true
+    limit_size: 8_000
+    lang_pairs:
+      - "en-de"
+    filtered_phenomena:
+      - "gender"
+    #  - "auxiliary"
+    #  - "formality"
+    #  - "inflection"
+    #  - "animacy"
+  - # additional random
+     dataset_name: opensubtitles
+     raw_dataset_path: ~/Datasets/ctxpro/data/opensubs/
+     dataset_path: ~/fine-tuning-ctx-mt/data/hf_opensubtitles
+     dataset_annotation_path: ~/Datasets/ctxpro/release
+     train_size: 4_000
+     split_seed: 1
+     sample_ctx_size: true
+     lang_pairs:
+       - "en-de"
+training_arguments:
+  optim: adafactor
+  learning_rate: 0.00001
+  lr_scheduler_type: inverse_sqrt
+  warmup_ratio: 0.1
+  per_device_train_batch_size: 32
+  per_device_eval_batch_size: 32
+  gradient_accumulation_steps: 16
+  weight_decay: 0.01
+  save_total_limit: 1
+  num_train_epochs: 10
+  fp16: true

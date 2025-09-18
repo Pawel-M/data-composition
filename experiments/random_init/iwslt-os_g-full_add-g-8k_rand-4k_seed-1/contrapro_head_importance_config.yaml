@@ -1,0 +1,61 @@
+results_dir: .
+results_suffix: filtered_ende_gender
+#tokenizer_name: 'opusmt-ende-ctx'
+#src_lang: en
+#tgt_lang: de
+#src_ctx_size: 1
+#tgt_ctx_size: 1
+#model_path: ./model
+#tokenizer_path: ./tokenizer
+#max_length: 512
+batch_size: 64
+raw_dataset_path: ~/fine-tuning-ctx-mt/data/ContraPro
+dataset_path: ~/fine-tuning-ctx-mt/data/hf_contrapro
+filter_context_size: true
+sample_ctx_size: false
+training_arguments:
+  optim: adafactor
+  learning_rate: 0.0
+  lr_scheduler_type: inverse_sqrt
+  warmup_ratio: 0.1
+  per_device_train_batch_size: 64
+  per_device_eval_batch_size: 64
+  gradient_accumulation_steps: 1
+  weight_decay: 0.01
+  save_total_limit: 0
+  num_train_epochs: 1
+  fp16: true
+freeze: false
+#unfreeze_heads: # encoder, decoder, cross
+#  decoder:
+#    -
+#      layer: 8
+#      projections: # q, k, v, out
+#        - k
+#        - v
+#      heads:
+#        - 9
+#        - 11
+#    - layer: 9
+#      projections: # q, k, v, out
+#        - k
+#        - v
+#      heads:
+#        - 2
+#        - 5
+#  cross:
+#    -
+#      layer: 7
+#      projections: # q, k, v, out
+#        - k
+#        - v
+#      heads:
+#        - 8
+#        - 14
+#    -
+#      layer: 8
+#      projections: # q, k, v, out
+#        - k
+#        - v
+#      heads:
+#        - 0
