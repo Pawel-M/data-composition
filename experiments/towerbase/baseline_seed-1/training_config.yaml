@@ -95,7 +95,5 @@ lora_arguments:
   bias: "none"
   target_modules: ["q_proj", "k_attn", "v_attn", "o_proj", "gate_proj", "up_proj", "down_proj"]
 
-#use_4bits: false
-
 #'4bits', '8bits', '16bits'
 quantization: '16bits'
