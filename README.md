@@ -1,6 +1,6 @@
 # _You Are What You Train_: Effects of Data Composition on Training Context-aware Machine Translation Models
 
-This repository contains the code for the paper "You Are What You Train: Effects of Data Composition on Training Context-aware Machine Translation Models" ([https://arxiv.org/abs/2509.14031](https://arxiv.org/abs/2509.14031)).
+This repository contains the code for the paper "You Are What You Train: Effects of Data Composition on Training Context-aware Machine Translation Models" ([https://aclanthology.org/2025.emnlp-main.1394/](https://aclanthology.org/2025.emnlp-main.1394/)).
 
 ## Requirements
 This repository was created in Python `3.12`. We use huggingface datasets framework. 
@@ -77,7 +77,7 @@ Please use the following citation if you find this repository or the accompanyin
 ```
 @inproceedings{maka-etal-2025-train,
     title = "You Are What You Train: Effects of Data Composition on Training Context-aware Machine Translation Models",
-    author = "Maka, Pawel  and
+    author = "M{\k{a}}ka, Pawe{\l}  and
       Semerci, Yusuf Can  and
       Scholtes, Jan  and
       Spanakis, Gerasimos",
